@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { setErrorMessage } from "./errorSlice";
-import { loadBalances } from "./balancesSlice";
+import { clearError, setErrorMessage } from "./errorSlice";
+import { loadBalances, clearBalances } from "./balancesSlice";
 
 export const ConnectionStatusEnum = {
   Connected: "Connected",
@@ -14,6 +14,7 @@ export const metaMaskSlice = createSlice({
     status: ConnectionStatusEnum.Disconnected,
     account: null,
     chainId: null,
+    chainName: null,
   },
   reducers: {
     connecting: (state) => {
@@ -26,18 +27,18 @@ export const metaMaskSlice = createSlice({
     disconnected: (state) => {
       state.status = ConnectionStatusEnum.Disconnected;
     },
-    chainChanged: (state, action) => {
-      state.status = ConnectionStatusEnum.Disconnected;
-      state.account = null;
-      state.chainId = action.payload;
-      connectAccount();
+    setChainData: (state, action) => {
+      state.chainId = action.payload.id;
+      state.chainName = action.payload.name;
     },
-    setChainName: (state, action) => {
-      state.chainId = action.payload;
+    resetStore: (state) => {
+      state.account = null;
+      state.chainId = null;
+      state.status = ConnectionStatusEnum.Disconnected;
     },
   },
 });
-export const { connected, disconnected, chainChanged, setChainName } =
+export const { connected, disconnected, resetStore, setChainData } =
   metaMaskSlice.actions;
 
 export default metaMaskSlice.reducer;
@@ -53,15 +54,18 @@ function loadNetwork() {
           "You are not connected to the Ethereum network. Please connect to the Ethereum network",
         ),
       );
-      dispatch(setChainName(`Chain ID: ${chainId}`));
+      dispatch(setChainData({ id: chainId, name: chainId }));
     } else {
-      dispatch(setChainName("Ethereum Mainnet"));
+      dispatch(setChainData({ id: 1, name: "Ethereum Mainnet" }));
     }
   };
 }
 
 export function connectAccount() {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    dispatch(resetStore());
+    dispatch(clearBalances());
+    dispatch(clearError());
     if (window.ethereum) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
