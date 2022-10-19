@@ -1,0 +1,1 @@
+export const NEXO_ADDRESS = "0xB62132e35a6c13ee1EE0f84dC5d40bad8d815206";
