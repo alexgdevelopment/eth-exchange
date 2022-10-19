@@ -46,15 +46,26 @@ function loadEthBalance() {
   };
 }
 
+async function getNexoBalanceAndDecimals() {
+  const provider = ethers.getDefaultProvider();
+
+  const nexoContract = new ethers.Contract(NEXO_ADDRESS, nexoAbi, provider);
+
+  const balance = nexoContract["balanceOf"](
+    window.ethereum.selectedAddress.toString(),
+  );
+  const decimals = nexoContract["decimals"]();
+  return {
+    balance: await balance,
+    decimals: await decimals,
+  };
+}
+
 function loadNexoBalance() {
   return async (dispatch) => {
-    const provider = ethers.getDefaultProvider();
     try {
-      const erc20 = new ethers.Contract(NEXO_ADDRESS, nexoAbi, provider);
-      const nexoUint = ethers.BigNumber.from(
-        await erc20["balanceOf"](window.ethereum.selectedAddress.toString()),
-      );
-      const decimals = await erc20["decimals"]();
+      const { balance, decimals } = await getNexoBalanceAndDecimals();
+      const nexoUint = ethers.BigNumber.from(balance);
       dispatch(
         setBalance({
           coin: "nexo",
