@@ -2,6 +2,48 @@
 
 A demo application that displays available ETH and NEXO balances, given a MetaMask extension is installed and the user has an account connected.
 
+## Setup
+
+### Clone the repo and cd into the folder
+
+```bash
+git clone git@github.com:alexgdevelopment/eth-exchange.git
+cd eth-exchange
+```
+
+### Install Node and NPM via NVM
+
+#### Install NVM
+
+For the most up-to-date guide follow the instructions [here](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+#### Install the version of node specified in the `.nvmrc` file and switch to it
+
+```bash
+nvm install
+nvm use
+```
+
+### Install dependencies
+
+```bash
+npm ci
+```
+
+### Set .env vars
+
+```bash
+cp .env.example .env
+```
+
+If using a local network, make sure that it is running, for instance:
+
+```bash
+npx hardhat node
+```
+
+### Done!
+
 ## Available Scripts
 
 In the project directory, you can run:

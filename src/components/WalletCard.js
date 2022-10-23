@@ -12,13 +12,14 @@ const WalletCard = () => {
   const chainName = useSelector((state) => state.metaMask.chainName);
   const chainId = useSelector((state) => state.metaMask.chainId);
   const connectionStatus = useSelector((state) => state.metaMask.status);
+  const configNetworkId = useSelector((state) => state.settings.networkId);
 
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", () => dispatch(connectAccount()));
       window.ethereum.on("chainChanged", () => dispatch(connectAccount()));
     }
-  }, []);
+  }, [dispatch]);
 
   function connectionButton() {
     let buttonText;
@@ -43,7 +44,7 @@ const WalletCard = () => {
         <Stack spacing={2}>
           <Typography variant="h6"> Account: {account} </Typography>
           <Typography variant="h6"> Network (ChainId): {chainName} </Typography>
-          {chainId === 1 ? <Balances /> : null}
+          {chainId === configNetworkId ? <Balances /> : null}
           {connectionButton()}
           {errorMessage ? (
             <Typography variant="body1" color="red">

@@ -44,19 +44,20 @@ export const { connected, disconnected, resetStore, setChainData } =
 export default metaMaskSlice.reducer;
 
 function loadNetwork() {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const chainId = parseInt(
       await window.ethereum.request({ method: "eth_chainId" }),
     );
-    if (chainId !== 1) {
+    const state = getState();
+    if (chainId !== state.settings.networkId) {
       dispatch(
         setErrorMessage(
-          "You are not connected to the Ethereum network. Please connect to the Ethereum network",
+          `You are not connected to the ${state.settings.networkName} network. Please connect to the ${state.settings.networkName} network`,
         ),
       );
       dispatch(setChainData({ id: chainId, name: chainId }));
     } else {
-      dispatch(setChainData({ id: 1, name: "Ethereum Mainnet" }));
+      dispatch(setChainData({ id: chainId, name: state.settings.networkName }));
     }
   };
 }
