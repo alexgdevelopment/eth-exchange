@@ -4,6 +4,7 @@ import metaMaskReducer from "./store/metaMaskSlice";
 import balancesReducer from "./store/balancesSlice";
 import settingsReducer from "./store/settingsSlice";
 import swapReducer from "./store/swapSlice";
+import ratesReducer from "./store/ratesSlice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     balances: balancesReducer,
     settings: settingsReducer,
     swap: swapReducer,
+    rates: ratesReducer,
   },
 });

@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Typography, Container } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -56,23 +56,19 @@ const WalletCard = () => {
   }
 
   return (
-    <Container maxWidth="md">
-      <Paper elevation={3} sx={{ p: 3 }}>
-        <Stack spacing={2}>
-          <Typography variant="h6"> Account: {account} </Typography>
-          <Typography variant="h6"> Network (ChainId): {chainName} </Typography>
-          {connectionButton()}
-          {errorMessage ? (
-            <Typography variant="body1" color="red">
-              Error: {errorMessage}
-            </Typography>
-          ) : null}
-          {chainId === configNetworkId ? <Balances /> : null}
-          {swapFormButton()}
-          {showSwapForm ? <SwapForm /> : null}
-        </Stack>
-      </Paper>
-    </Container>
+    <>
+      <Typography variant="h6"> Account: {account} </Typography>
+      <Typography variant="h6"> Network (ChainId): {chainName} </Typography>
+      {connectionButton()}
+      {errorMessage ? (
+        <Typography variant="body1" color="red">
+          Error: {errorMessage}
+        </Typography>
+      ) : null}
+      {chainId === configNetworkId ? <Balances /> : null}
+      {swapFormButton()}
+      {showSwapForm ? <SwapForm /> : null}
+    </>
   );
 };
 

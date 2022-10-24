@@ -38,6 +38,10 @@ npm ci
 cp .env.example .env
 ```
 
+### Set CoinAPI Key
+
+Eth-Exchange uses CoinApi.io to retrieve exchange rates. Please make sure to set an API key in the .env vars. You can get one for free [here](https://www.coinapi.io/).
+
 ### Optional
 
 Run a local Hardhat Node (using local config):
