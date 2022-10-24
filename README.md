@@ -1,6 +1,8 @@
 # ETH-Exchange
 
-A demo application that displays available ETH and NEXO balances, given a MetaMask extension is installed and the user has an account connected.
+A demo application that displays available ETH, WETH and NEXO balances and enables wrapping ETH into WETH.
+
+Prerequisites: An installed MetaMask extension.
 
 ## Setup
 
@@ -36,7 +38,9 @@ npm ci
 cp .env.example .env
 ```
 
-If using a local network, make sure that it is running, for instance:
+### Optional
+
+Run a local Hardhat Node (using local config):
 
 ```bash
 npx hardhat node
