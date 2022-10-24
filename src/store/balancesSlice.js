@@ -1,22 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { setErrorMessage } from "./errorSlice";
 import { ethers } from "ethers";
-import { NEXO_ADDRESS } from "../utils/constants";
-import { nexoAbi } from "../utils/abis";
+import { NEXO_ADDRESS, WETH_ADDRESS } from "../utils/constants";
+import { nexoAbi, wethAbi } from "../utils/abis";
+
+const initialState = {
+  eth: null,
+  nexo: null,
+  weth: null,
+};
 
 export const balancesSlice = createSlice({
   name: "balances",
-  initialState: {
-    eth: null,
-    nexo: null,
-  },
+  initialState,
   reducers: {
     setBalance: (state, action) => {
       state[action.payload.coin] = action.payload.amount;
     },
-    clearBalances: (state) => {
-      Object.keys(state).forEach((key) => (state[key] = null));
-    },
+    clearBalances: () => initialState,
   },
 });
 export const { setBalance, clearBalances } = balancesSlice.actions;
@@ -27,6 +28,7 @@ export function loadBalances() {
   return (dispatch) => {
     dispatch(loadEthBalance());
     dispatch(loadNexoBalance());
+    dispatch(loadWethBalance());
   };
 }
 
@@ -70,6 +72,39 @@ function loadNexoBalance() {
         setBalance({
           coin: "nexo",
           amount: ethers.utils.formatUnits(nexoUint, decimals),
+        }),
+      );
+    } catch (e) {
+      dispatch(setErrorMessage(e.message));
+    }
+  };
+}
+
+async function getWethBalanceAndDecimals() {
+  const provider = ethers.getDefaultProvider();
+
+  const wethContract = new ethers.Contract(WETH_ADDRESS, wethAbi, provider);
+
+  const balance = wethContract["balanceOf"](
+    window.ethereum.selectedAddress.toString(),
+  );
+  const decimals = wethContract["decimals"]();
+  return {
+    balance: await balance,
+    decimals: await decimals,
+  };
+}
+
+function loadWethBalance() {
+  return async (dispatch) => {
+    try {
+      const { balance, decimals } = await getWethBalanceAndDecimals();
+      const wethUint = ethers.BigNumber.from(balance);
+      console.log("setting balance", wethUint);
+      dispatch(
+        setBalance({
+          coin: "weth",
+          amount: ethers.utils.formatUnits(wethUint, decimals),
         }),
       );
     } catch (e) {

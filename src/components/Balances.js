@@ -6,11 +6,15 @@ import { useSelector } from "react-redux";
 const Balances = () => {
   const ethBalance = useSelector((state) => state.balances.eth);
   const nexoBalance = useSelector((state) => state.balances.nexo);
+  const wethBalance = useSelector((state) => state.balances.weth);
 
   return (
     <>
       <Typography variant="h6">
         Ether Balance: {ethBalance} {ethBalance ? "ETH" : null}
+      </Typography>
+      <Typography variant="h6">
+        WETH Balance: {wethBalance} {wethBalance ? "WETH" : null}
       </Typography>
       <Typography variant="h6">
         Nexo Balance: {nexoBalance} {nexoBalance ? "NEXO" : null}
